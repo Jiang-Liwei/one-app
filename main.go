@@ -1,6 +1,6 @@
 package main
 
-import "one-app/bootstrap"
+import "forum/bootstrap"
 
 func main() {
 	bootstrap.Start()

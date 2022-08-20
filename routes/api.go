@@ -1,8 +1,8 @@
 package routes
 
 import (
+	controllers "forum/app/http/controllers/api"
 	"github.com/gin-gonic/gin"
-	controllers "one-app/app/http/controllers/api"
 )
 
 // RegisterRoutes 注册路由
