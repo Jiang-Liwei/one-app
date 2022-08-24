@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"flag"
+	"forum/app/models/user"
 	btsConfig "forum/config"
 	"forum/pkg/config"
 	"forum/pkg/database"
@@ -23,9 +24,13 @@ func Start() {
 	r := gin.Default()
 
 	database.SetupDB()
+	err := database.DB.AutoMigrate(&user.User{})
+	if err != nil {
+		return
+	}
 	routes.SetupRoute(r)
 
-	err := r.Run(":" + config.Get[string]("app.port"))
+	err = r.Run(":" + config.Get[string]("app.port"))
 	if err != nil {
 		return
 	} // 监听并在 0.0.0.0:8080 上启动服务
