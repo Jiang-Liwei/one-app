@@ -6,6 +6,7 @@ import (
 	btsConfig "forum/config"
 	"forum/pkg/config"
 	"forum/pkg/database"
+	"forum/pkg/requests"
 	"forum/routes"
 	"github.com/gin-gonic/gin"
 )
@@ -24,6 +25,7 @@ func Start() {
 	r := gin.Default()
 
 	database.SetupDB()
+	requests.InitRequests()
 	err := database.DB.AutoMigrate(&user.User{})
 	if err != nil {
 		return
