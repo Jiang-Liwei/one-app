@@ -4,10 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/thedevsaddam/govalidator"
 	"net/url"
-	"sync"
 )
-
-var onec sync.Once
 
 type PhoneExistRequest struct {
 	Phone string `json:"phone,omitempty" valid:"phone"`
