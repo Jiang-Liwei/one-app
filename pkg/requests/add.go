@@ -6,15 +6,10 @@ import (
 	"regexp"
 )
 
-type Add struct {
-}
-
 func init() {
 	mobile()
 }
-func (a Add) Add() bool {
-	return true
-}
+
 func mobile() {
 	// 添加手机正则验证
 	govalidator.AddCustomRule("mobile", func(field string, rule string, message string, value interface{}) error {
