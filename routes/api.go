@@ -14,8 +14,13 @@ func RegisterRoutes(route *gin.Engine) {
 		api.GET("/index", index.Index)
 		authGroup := api.Group("/auth")
 		{
-			signup := new(auth.SignUpController)
-			authGroup.POST("/phone/exist", signup.IsPhoneExist)
+			signupGroup := authGroup.Group("signup")
+			{
+				signup := new(auth.SignUpController)
+				signupGroup.POST("/phone/exist", signup.IsPhoneExist)
+				// 判断 Email 是否已注册
+				signupGroup.POST("/email/exist", signup.IsEmailExist)
+			}
 		}
 	}
 }
