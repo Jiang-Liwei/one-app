@@ -6,6 +6,7 @@ import (
 	btsConfig "forum/config"
 	"forum/pkg/config"
 	"forum/pkg/database"
+	"forum/pkg/logger"
 	"forum/pkg/requests"
 	"forum/routes"
 	"github.com/gin-gonic/gin"
@@ -21,6 +22,9 @@ func Start() {
 	flag.StringVar(&env, "env", "", "加载 .env 文件，如 --env=testing 加载的是 .env.testing 文件")
 	flag.Parse()
 	config.InitConfig(env)
+
+	// 初始化 Logger
+	logger.SetupLogger()
 
 	r := gin.Default()
 
