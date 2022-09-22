@@ -3,7 +3,6 @@ package requests
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/thedevsaddam/govalidator"
-	"net/url"
 )
 
 type PhoneExistRequest struct {
@@ -14,8 +13,8 @@ type EmailExistRequest struct {
 	Email string `json:"email,omitempty" valid:"email"`
 }
 
-// ValidatePhoneExist 验证手机号是否已经注册
-func ValidatePhoneExist(data interface{}, c *gin.Context) url.Values {
+// PhoneExist 验证手机号是否已经注册
+func PhoneExist(data interface{}, c *gin.Context) map[string][]string {
 
 	// 验证规则
 	rules := govalidator.MapData{
@@ -31,20 +30,11 @@ func ValidatePhoneExist(data interface{}, c *gin.Context) url.Values {
 		},
 	}
 
-	// 配置初始化
-	opts := govalidator.Options{
-		Data:          data,
-		Rules:         rules,
-		TagIdentifier: "valid", // 模型中的 Struct 标签标识符
-		Messages:      messages,
-	}
-
-	// 开始验证
-	return govalidator.New(opts).ValidateStruct()
+	return validate(data, rules, messages)
 }
 
-// ValidateEmailExist 验证邮箱是否注册
-func ValidateEmailExist(data interface{}, c *gin.Context) map[string][]string {
+// EmailExist 验证邮箱是否注册
+func EmailExist(data interface{}, c *gin.Context) map[string][]string {
 
 	// 自定义验证规则
 	rules := govalidator.MapData{
@@ -60,15 +50,5 @@ func ValidateEmailExist(data interface{}, c *gin.Context) map[string][]string {
 			"email:Email 格式不正确，请提供有效的邮箱地址",
 		},
 	}
-
-	// 配置初始化
-	opts := govalidator.Options{
-		Data:          data,
-		Rules:         rules,
-		TagIdentifier: "valid", // 模型中的 Struct 标签标识符
-		Messages:      messages,
-	}
-
-	// 开始验证
-	return govalidator.New(opts).ValidateStruct()
+	return validate(data, rules, messages)
 }
