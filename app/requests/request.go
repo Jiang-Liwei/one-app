@@ -12,8 +12,6 @@ type ValidatorFunc func(interface{}, *gin.Context) map[string][]string
 
 func Validate(c *gin.Context, obj interface{}, handler ValidatorFunc) bool {
 
-	fmt.Println(obj)
-	fmt.Println(1)
 	if err := c.ShouldBindJSON(obj); err != nil {
 		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "非法请求",
@@ -28,7 +26,7 @@ func Validate(c *gin.Context, obj interface{}, handler ValidatorFunc) bool {
 	// 3. 判断验证是否通过
 	if len(errs) > 0 {
 		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"message": "请求验证不通过，具体请查看 errors",
+			"message": "验证失败",
 			"errors":  errs,
 		})
 		return false
