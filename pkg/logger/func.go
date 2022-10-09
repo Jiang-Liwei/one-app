@@ -16,9 +16,13 @@ func Dump(value interface{}, msg ...string) bool {
 }
 
 // LogRecord 日志
-func LogRecord(err error, level string) bool {
+func LogRecord(err error, levels ...string) bool {
 	if err == nil {
 		return false
+	}
+	level := ""
+	if len(levels) > 0 {
+		level = levels[0]
 	}
 	switch level {
 	case "err":

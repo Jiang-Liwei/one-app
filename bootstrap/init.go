@@ -7,6 +7,7 @@ import (
 	"forum/pkg/config"
 	"forum/pkg/database"
 	"forum/pkg/logger"
+	"forum/pkg/redis"
 	"forum/pkg/requests"
 	"forum/routes"
 	"github.com/gin-gonic/gin"
@@ -35,6 +36,8 @@ func Start() {
 	r := gin.Default()
 
 	database.SetupDB()
+	// 初始化 Redis
+	redis.SetupRedis()
 	requests.InitRequests()
 	err := database.DB.AutoMigrate(&user.User{})
 	if err != nil {
