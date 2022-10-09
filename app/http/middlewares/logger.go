@@ -43,10 +43,10 @@ func Logger() gin.HandlerFunc {
 
 		// 开始记录日志的逻辑
 		cost := time.Since(start)
-		responStatus := context.Writer.Status()
+		respondStatus := context.Writer.Status()
 
 		logFields := []zap.Field{
-			zap.Int("status", responStatus),
+			zap.Int("status", respondStatus),
 			zap.String("request", context.Request.Method+" "+context.Request.URL.String()),
 			zap.String("query", context.Request.URL.RawQuery),
 			zap.String("ip", context.ClientIP()),
@@ -63,12 +63,12 @@ func Logger() gin.HandlerFunc {
 			logFields = append(logFields, zap.String("Response Body", w.body.String()))
 		}
 
-		if responStatus > 400 && responStatus <= 499 {
+		if respondStatus > 400 && respondStatus <= 499 {
 			// 除了 StatusBadRequest 以外，warning 提示一下，常见的有 403 404，开发时都要注意
-			logger.Warn("HTTP Warning "+cast.ToString(responStatus), logFields...)
-		} else if responStatus >= 500 && responStatus <= 599 {
+			logger.Warn("HTTP Warning "+cast.ToString(respondStatus), logFields...)
+		} else if respondStatus >= 500 && respondStatus <= 599 {
 			// 除了内部错误，记录 error
-			logger.Error("HTTP Error "+cast.ToString(responStatus), logFields...)
+			logger.Error("HTTP Error "+cast.ToString(respondStatus), logFields...)
 		} else {
 			logger.Debug("HTTP Access Log", logFields...)
 		}
