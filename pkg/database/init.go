@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"forum/pkg/config"
+	"forum/pkg/logger"
 	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 // SetupDB 初始化数据库和 ORM
@@ -39,7 +39,7 @@ func SetupDB() {
 	}
 
 	// 连接数据库，并设置 GORM 的日志模式
-	Connect(dbConfig, logger.Default.LogMode(logger.Info))
+	Connect(dbConfig, logger.NewGormLogger())
 
 	// 设置最大连接数
 	SQLDB.SetMaxOpenConns(config.Get[int]("database.mysql.max_open_connections"))
