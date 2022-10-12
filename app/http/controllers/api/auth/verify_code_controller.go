@@ -4,8 +4,8 @@ import (
 	"forum/app/http/controllers/api"
 	"forum/pkg/captcha"
 	"forum/pkg/logger"
+	"forum/pkg/response"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // VerifyCodeController 控制器
@@ -22,7 +22,7 @@ func (vc *VerifyCodeController) ShowCaptcha(c *gin.Context) {
 	logger.LogRecord(err, "err")
 
 	// 返回给用户
-	c.JSON(http.StatusOK, gin.H{
+	response.JSON(c, gin.H{
 		"id":    id,
 		"image": base64,
 	})

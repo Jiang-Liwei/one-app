@@ -2,9 +2,9 @@ package requests
 
 import (
 	"fmt"
+	"forum/pkg/response"
 	"github.com/gin-gonic/gin"
 	"github.com/thedevsaddam/govalidator"
-	"net/http"
 )
 
 // ValidatorFunc 验证函数类型
@@ -13,10 +13,7 @@ type ValidatorFunc func(interface{}, *gin.Context) map[string][]string
 func Validate(c *gin.Context, obj interface{}, handler ValidatorFunc) bool {
 
 	if err := c.ShouldBindJSON(obj); err != nil {
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"message": "非法请求",
-			"error":   err.Error(),
-		})
+		response.BadRequest(c, err)
 		fmt.Println(err.Error())
 		return false
 	}
@@ -25,10 +22,7 @@ func Validate(c *gin.Context, obj interface{}, handler ValidatorFunc) bool {
 
 	// 3. 判断验证是否通过
 	if len(errs) > 0 {
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"message": "验证失败",
-			"errors":  errs,
-		})
+		response.ValidationError(c, errs)
 		return false
 	}
 	return true

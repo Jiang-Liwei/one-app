@@ -4,8 +4,8 @@ import (
 	"forum/app/http/controllers/api"
 	"forum/app/models/user"
 	"forum/app/requests"
+	"forum/pkg/response"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type SignUpController struct {
@@ -22,7 +22,7 @@ func (signup *SignUpController) IsPhoneExist(c *gin.Context) {
 		return
 	}
 	//  检查数据库并返回响应
-	c.JSON(http.StatusOK, gin.H{
+	response.JSON(c, gin.H{
 		"exist": user.IsPhoneExist(request.Phone),
 	})
 }
@@ -37,7 +37,7 @@ func (signup *SignUpController) IsEmailExist(c *gin.Context) {
 		return
 	}
 	//  检查数据库并返回响应
-	c.JSON(http.StatusOK, gin.H{
+	response.JSON(c, gin.H{
 		"exist": user.IsEmailExist(request.Email),
 	})
 }
