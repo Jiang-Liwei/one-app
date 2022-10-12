@@ -2,6 +2,7 @@ package config
 
 import (
 	"forum/pkg/helpers"
+	"github.com/spf13/cast"
 	viperLib "github.com/spf13/viper"
 	"os"
 )
@@ -86,11 +87,16 @@ func Add(name string, configFn ConfigFunc) {
 // 第二个参数允许传参默认值
 func Get[T any](path string, defaultValue ...interface{}) T {
 	if value := internalGet(path, defaultValue...); value != nil {
-		return value.(T)
+		if newValue, ok := value.(T); ok {
+			return newValue
+		}
+		var typeValue T
+		newValue := changeTypeReturn(typeValue, value, path)
+		return newValue.(T)
 	}
 	// 泛型不能返回 nil，因此需要根据类型建立空变量，这样返回的会是对应类型的"空"值
-	var fallback T
-	return fallback
+	var typeValue T
+	return typeValue
 }
 
 func internalGet(path string, defaultValue ...interface{}) interface{} {
@@ -102,4 +108,25 @@ func internalGet(path string, defaultValue ...interface{}) interface{} {
 		return nil
 	}
 	return viper.Get(path)
+}
+
+func changeTypeReturn(typeValue any, value interface{}, path string) interface{} {
+	var newValue interface{}
+	switch typeValue.(type) {
+	case string:
+		newValue = cast.ToString(value)
+	case int:
+		newValue = cast.ToInt(value)
+	case float64:
+		newValue = cast.ToFloat64(value)
+	case int64:
+		newValue = cast.ToInt64(value)
+	case uint:
+		newValue = cast.ToUint(value)
+	case bool:
+		newValue = cast.ToBool(value)
+	case map[string]string:
+		newValue = viper.GetStringMapString(path)
+	}
+	return newValue
 }

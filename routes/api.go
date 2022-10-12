@@ -21,6 +21,8 @@ func RegisterRoutes(route *gin.Engine) {
 				// 判断 Email 是否已注册
 				signupGroup.POST("/email/exist", signup.IsEmailExist)
 			}
+			verifyCode := new(auth.VerifyCodeController)
+			authGroup.GET("/verify-codes/captcha", verifyCode.ShowCaptcha)
 		}
 	}
 }
