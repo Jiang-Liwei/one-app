@@ -27,15 +27,23 @@ var internalSMS *SMS
 // NewSMS 单例模式获取
 func NewSMS() *SMS {
 	once.Do(func() {
-		internalSMS = &SMS{
-			Driver: &Aliyun{},
+		switch config.Get[string]("sms.platform") {
+		case "aliyun":
+			internalSMS = &SMS{
+				Driver: &Aliyun{},
+			}
+		default:
+			internalSMS = &SMS{
+				Driver: &Tencent{},
+			}
 		}
+
 	})
 
 	return internalSMS
 }
 
 // Send 发送短信
-func (sms *SMS) Send(phone string, message Message) bool {
-	return sms.Driver.Send(phone, message, config.Get[map[string]string]("sys.aliyun"))
+func (sms *SMS) Send(phone []string, message Message) bool {
+	return sms.Driver.Send(phone, message)
 }
