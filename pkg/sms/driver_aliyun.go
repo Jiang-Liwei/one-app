@@ -2,6 +2,7 @@ package sms
 
 import (
 	"encoding/json"
+	"errors"
 	"forum/pkg/config"
 	"forum/pkg/logger"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
@@ -80,7 +81,11 @@ func (s *Aliyun) Send(phone []string, message Message) bool {
 			}
 		}()
 		// 创建对应 API 的 Request 。 方法的命名规则为 API 方法名再加上 Request 。例如：
-		_, err = client.SendSmsWithOptions(sendSmsRequest, &util.RuntimeOptions{})
+		result, err := client.SendSmsWithOptions(sendSmsRequest, &util.RuntimeOptions{})
+		if *result.Body.Code != "OK" {
+			err = errors.New(*result.Body.Message)
+			return err
+		}
 		if err != nil {
 			logger.ErrorString("短信-阿里云", "发送短信失败", err.Error())
 			return err

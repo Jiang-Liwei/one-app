@@ -2,7 +2,6 @@ package sms
 
 import (
 	"encoding/json"
-	"fmt"
 	"forum/pkg/config"
 	"forum/pkg/logger"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -73,9 +72,19 @@ func (s Tencent) Send(phone []string, message Message) bool {
 		logger.DebugJSON("短信-腾讯云", "非SDK错误", err)
 		return false
 	}
+
+	sendStatusSet := response.Response.SendStatusSet
+
+	var result bool = true
+	for _, setValue := range sendStatusSet {
+		resultCode := *setValue.Code
+		if resultCode != "Ok" {
+			logger.ErrorString("短信-腾讯云", "发送失败", "手机号："+*setValue.PhoneNumber+",错误:"+*setValue.Message)
+			result = false
+		}
+	}
+
 	b, _ := json.Marshal(response.Response)
 	logger.DebugJSON("短信-腾讯云", "发送结果", string(b))
-	// 打印返回的json字符串
-	fmt.Printf("%s", b)
-	return true
+	return result
 }
