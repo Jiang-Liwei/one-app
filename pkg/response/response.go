@@ -93,19 +93,9 @@ func Error(c *gin.Context, err error, msg ...string) {
 }
 
 // ValidationError 处理表单验证不通过的错误，返回的 JSON 示例：
-//
-//	{
-//	    "errors": {
-//	        "phone": [
-//	            "手机号为必填项，参数名称 phone",
-//	            "手机号长度必须为 11 位的数字"
-//	        ]
-//	    },
-//	    "message": "请求验证不通过，具体请查看 errors"
-//	}
 func ValidationError(c *gin.Context, errors map[string][]string) {
 	c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-		"message": "非法请求",
+		"message": "验证失败",
 		"errors":  errors,
 	})
 }
@@ -113,7 +103,7 @@ func ValidationError(c *gin.Context, errors map[string][]string) {
 // Unauthorized 响应 401
 func Unauthorized(c *gin.Context, msg ...string) {
 	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-		"message": defaultMessage("非法请求。", msg...),
+		"message": defaultMessage("请登录后操作。", msg...),
 	})
 }
 

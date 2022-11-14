@@ -22,7 +22,10 @@ func RegisterRoutes(route *gin.Engine) {
 				signupGroup.POST("/email/exist", signup.IsEmailExist)
 			}
 			verifyCode := new(auth.VerifyCodeController)
+			// 图片验证码
 			authGroup.GET("/verify-codes/captcha", verifyCode.ShowCaptcha)
+			// 发送短信
+			authGroup.POST("/verify-codes/sms", verifyCode.SendUsingPhone)
 		}
 	}
 }

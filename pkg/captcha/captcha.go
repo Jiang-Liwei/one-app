@@ -1,7 +1,6 @@
 package captcha
 
 import (
-	"forum/pkg/app"
 	"forum/pkg/config"
 	"forum/pkg/redis"
 	"github.com/mojocn/base64Captcha"
@@ -55,10 +54,6 @@ func (c Captcha) GenerateCaptcha() (id, base64 string, err error) {
 // VerifyCaptcha 验证验证码是否正确
 func (c Captcha) VerifyCaptcha(id, answer string) (match bool) {
 
-	// 测试环境可以不做验证
-	if !app.IsProduction() && id == config.Get[string]("captcha.testing_key") {
-		return true
-	}
 	// 第三个参数是验证后是否删除
 	return c.Base64Captcha.Verify(id, answer, false)
 }
