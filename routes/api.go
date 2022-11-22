@@ -20,6 +20,7 @@ func RegisterRoutes(route *gin.Engine) {
 				signupGroup.POST("/phone/exist", signup.IsPhoneExist)
 				// 判断 Email 是否已注册
 				signupGroup.POST("/email/exist", signup.IsEmailExist)
+				signupGroup.POST("/using-phone", signup.SignupUsingPhone)
 			}
 			verifyCode := new(auth.VerifyCodeController)
 			// 图片验证码

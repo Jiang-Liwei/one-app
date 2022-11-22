@@ -1,6 +1,9 @@
 package user
 
-import "forum/app/models"
+import (
+	"forum/app/models"
+	"forum/pkg/database"
+)
 
 type User struct {
 	models.BaseModel
@@ -9,4 +12,9 @@ type User struct {
 	Email    string `json:"-"`
 	Phone    string `json:"-"`
 	Password string `json:"-"`
+}
+
+// Create 创建用户
+func (userModel *User) Create() {
+	database.DB.Create(&userModel)
 }

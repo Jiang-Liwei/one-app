@@ -41,3 +41,31 @@ func (signup *SignUpController) IsEmailExist(c *gin.Context) {
 		"exist": user.IsEmailExist(request.Email),
 	})
 }
+
+// SignupUsingPhone 短信注册账号
+func (signup *SignUpController) SignupUsingPhone(c *gin.Context) {
+
+	// 表单验证
+	request := requests.SignupUsingPhoneRequest{}
+	if ok := requests.Validate(c, &request, requests.SignupUsingPhone); !ok {
+		return
+	}
+
+	// 注册
+	_user := user.User{
+		Name:     request.Name,
+		Phone:    request.Phone,
+		Password: request.Password,
+	}
+
+	_user.Create()
+
+	if _user.ID > 0 {
+		response.CreatedJSON(c, gin.H{
+			"data": _user,
+		})
+		return
+	}
+
+	response.Abort500(c, "创建用户失败，请稍后尝试~")
+}
