@@ -4,6 +4,7 @@ import (
 	"forum/app/http/controllers/api"
 	"forum/app/models/user"
 	"forum/app/requests"
+	"forum/pkg/jwt"
 	"forum/pkg/response"
 	"github.com/gin-gonic/gin"
 )
@@ -61,8 +62,10 @@ func (signup *SignUpController) SignupUsingPhone(c *gin.Context) {
 	_user.Create()
 
 	if _user.ID > 0 {
+		token := jwt.NewJWT().IssueToken(_user.GetStringID(), _user.Name)
 		response.CreatedJSON(c, gin.H{
-			"data": _user,
+			"token": token,
+			"data":  _user,
 		})
 		return
 	}

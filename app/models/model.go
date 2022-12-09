@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"github.com/spf13/cast"
+	"time"
+)
 
 // BaseModel 模型基类
 type BaseModel struct {
@@ -11,4 +14,9 @@ type BaseModel struct {
 type TimestampsField struct {
 	CreatedAt time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
+}
+
+// GetStringID 获取 ID 的字符串格式
+func (m BaseModel) GetStringID() string {
+	return cast.ToString(m.ID)
 }
