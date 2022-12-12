@@ -31,7 +31,7 @@ func PhoneExist(data interface{}, c *gin.Context) map[string][]string {
 		},
 	}
 
-	return validate(data, rules, messages)
+	return NewValidate(data, rules, messages)
 }
 
 // EmailExist 验证邮箱是否注册
@@ -51,7 +51,7 @@ func EmailExist(data interface{}, c *gin.Context) map[string][]string {
 			"email:Email 格式不正确，请提供有效的邮箱地址",
 		},
 	}
-	return validate(data, rules, messages)
+	return NewValidate(data, rules, messages)
 }
 
 // SignupUsingPhoneRequest 通过手机注册的请求信息
@@ -94,7 +94,7 @@ func SignupUsingPhone(data interface{}, c *gin.Context) map[string][]string {
 			"digits:验证码长度必须为6",
 		},
 	}
-	errs := validate(data, rules, msg)
+	errs := NewValidate(data, rules, msg)
 	_data := data.(*SignupUsingPhoneRequest)
 	errs = validators.ValidatePasswordConfirm(_data.Password, _data.PasswordConfirm, errs)
 	errs = validators.ValidateVerifyCode(_data.Phone, _data.VerifyCode, errs)

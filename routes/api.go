@@ -27,6 +27,15 @@ func RegisterRoutes(route *gin.Engine) {
 			authGroup.GET("/verify-codes/captcha", verifyCode.ShowCaptcha)
 			// 发送短信
 			authGroup.POST("/verify-codes/sms", verifyCode.SendUsingPhone)
+
+			// 登录模块
+			login := new(auth.LoginController)
+			loginGroup := authGroup.Group("login")
+			{
+				// 手机号登录
+				loginGroup.POST("using-phone", login.LoginByPhone)
+			}
+
 		}
 	}
 }

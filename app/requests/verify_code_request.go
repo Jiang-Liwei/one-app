@@ -34,7 +34,7 @@ func VerifyCodePhone(data interface{}, c *gin.Context) map[string][]string {
 		},
 	}
 
-	errs := validate(data, rules, messages)
+	errs := NewValidate(data, rules, messages)
 
 	_data := data.(*VerifyCodePhoneRequest)
 	if ok := captcha.NewCaptcha().VerifyCaptcha(_data.CaptchaID, _data.CaptchaAnswer); !ok {

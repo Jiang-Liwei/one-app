@@ -25,3 +25,20 @@ func IsPhoneExist(phone string) bool {
 	}
 	return true
 }
+
+// GetByPhone 手机号获取用户信息
+func GetByPhone(phone string) (user User) {
+	database.DB.Where("phone = ?", phone).First(&user)
+
+	return
+}
+
+// GetByMulti 通过 手机号/Email/用户名 来获取用户
+func GetByMulti(loginID string) (user User) {
+	database.DB.
+		Where("phone = ?", loginID).
+		Or("email = ?", loginID).
+		Or("name = ?", loginID).
+		First(&user)
+	return
+}
