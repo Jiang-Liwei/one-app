@@ -32,8 +32,10 @@ func RegisterRoutes(route *gin.Engine) {
 			login := new(auth.LoginController)
 			loginGroup := authGroup.Group("login")
 			{
-				// 手机号登录
+				// 验证码登录
 				loginGroup.POST("using-phone", login.LoginByPhone)
+				// 账号登录
+				loginGroup.POST("using-password", login.LoginByPassword)
 			}
 
 		}
