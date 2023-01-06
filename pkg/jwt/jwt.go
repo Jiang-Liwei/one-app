@@ -16,7 +16,7 @@ var (
 	ErrTokenExpiredMaxRefresh error = errors.New("令牌已过最大刷新时间")
 	ErrTokenMalformed         error = errors.New("请求令牌格式有误")
 	ErrTokenInvalid           error = errors.New("请求令牌无效")
-	ErrHeaderEmpty            error = errors.New("需要认证才能访问！")
+	ErrHeaderEmpty            error = errors.New("请先登录!")
 	ErrHeaderMalformed        error = errors.New("请求头中 Authorization 格式有误")
 )
 
@@ -181,11 +181,9 @@ func (j *JWT) expireAtTime() time.Time {
 	timeNow := app.TimeNowInTimezone()
 
 	var expireTime int64
-	if config.Get[bool]("app.debug") {
-		expireTime = config.Get[int64]("jwt.debug_expire_time")
-	} else {
-		expireTime = config.Get[int64]("jwt.expire_time")
-	}
+
+	expireTime = config.Get[int64]("jwt.expire_time")
+
 	expire := time.Duration(expireTime) * time.Minute
 
 	return timeNow.Add(expire)
@@ -194,7 +192,7 @@ func (j *JWT) expireAtTime() time.Time {
 // createToken 创建token
 func (j *JWT) createToken(claims CustomClaims) (string, error) {
 	// 使用HS256算法进行token生成
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SigningString()
+	return token.SignedString(j.SignKey)
 }

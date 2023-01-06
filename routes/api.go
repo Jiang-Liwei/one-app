@@ -36,6 +36,8 @@ func RegisterRoutes(route *gin.Engine) {
 				loginGroup.POST("using-phone", login.LoginByPhone)
 				// 账号登录
 				loginGroup.POST("using-password", login.LoginByPassword)
+				// 刷新token
+				loginGroup.POST("refresh-token", login.RefreshToken)
 			}
 
 		}
