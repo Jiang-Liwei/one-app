@@ -103,7 +103,7 @@ func ValidationError(c *gin.Context, errors map[string][]string) {
 // Unauthorized 响应 401
 func Unauthorized(c *gin.Context, msg ...string) {
 	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-		"message": defaultMessage("请登录后操作。", msg...),
+		"message": defaultMessage("请先登录。", msg...),
 	})
 }
 
