@@ -20,6 +20,11 @@ func (userModel *User) Create() {
 	database.DB.Create(&userModel)
 }
 
+func (userModel *User) Save() (rowsAffected int64) {
+	result := database.DB.Save(&userModel)
+	return result.RowsAffected
+}
+
 // ComparePassword 密码是否正确
 func (userModel *User) ComparePassword(_password string) bool {
 	return hash.BcryptCheck(_password, userModel.Password)

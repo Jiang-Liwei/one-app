@@ -17,9 +17,11 @@ func RegisterRoutes(route *gin.Engine) {
 			signupGroup := authGroup.Group("signup")
 			{
 				signup := new(auth.SignUpController)
+				// 手机是否注册
 				signupGroup.POST("/phone/exist", signup.IsPhoneExist)
 				// 判断 Email 是否已注册
 				signupGroup.POST("/email/exist", signup.IsEmailExist)
+				// 手机号注册
 				signupGroup.POST("/using-phone", signup.SignupUsingPhone)
 			}
 			verifyCode := new(auth.VerifyCodeController)
@@ -40,6 +42,13 @@ func RegisterRoutes(route *gin.Engine) {
 				loginGroup.POST("refresh-token", login.RefreshToken)
 			}
 
+			//密码操作模块
+			password := new(auth.PasswordController)
+			passwordGroup := authGroup.Group("password")
+			{
+				// 手机号重置密码
+				passwordGroup.POST("reset/using-phone", password.ResetByPhone)
+			}
 		}
 	}
 }
