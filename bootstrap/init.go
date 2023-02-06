@@ -51,6 +51,7 @@ func Start() {
 	rootCmd.AddCommand(
 		cmd.Serve,
 		cmd.Key,
+		cmd.Test,
 	)
 
 	// 配置默认运行 Web 服务
