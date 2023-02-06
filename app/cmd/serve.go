@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var CmdServe = &cobra.Command{
+var Serve = &cobra.Command{
 	Use:   "serve",
 	Short: "Start web serve",
 	Run:   runWeb,

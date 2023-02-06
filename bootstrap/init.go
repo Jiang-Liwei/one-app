@@ -49,11 +49,12 @@ func Start() {
 
 	// 注册子命令
 	rootCmd.AddCommand(
-		cmd.CmdServe,
+		cmd.Serve,
+		cmd.Key,
 	)
 
 	// 配置默认运行 Web 服务
-	cmd.RegisterDefaultCmd(rootCmd, cmd.CmdServe)
+	cmd.RegisterDefaultCmd(rootCmd, cmd.Serve)
 
 	// 注册全局参数，--env
 	cmd.RegisterGlobalFlags(rootCmd)
