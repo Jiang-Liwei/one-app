@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"fmt"
 	"forum/app/cmd"
+	"forum/app/cmd/make"
 	btsConfig "forum/config"
 	"forum/pkg/config"
 	"forum/pkg/console"
@@ -52,6 +53,7 @@ func Start() {
 		cmd.Serve,
 		cmd.Key,
 		cmd.Test,
+		make.Make,
 	)
 
 	// 配置默认运行 Web 服务

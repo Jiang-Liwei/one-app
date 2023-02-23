@@ -1,4 +1,4 @@
-package string
+package str
 
 import (
 	"github.com/gertd/go-pluralize"
