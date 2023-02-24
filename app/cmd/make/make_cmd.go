@@ -1,7 +1,6 @@
 package make
 
 import (
-	"fmt"
 	"forum/pkg/console"
 
 	"github.com/spf13/cobra"
@@ -16,12 +15,7 @@ var MakeCMD = &cobra.Command{
 
 func runMakeCMD(cmd *cobra.Command, args []string) {
 
-	// 格式化模型名称，返回一个 Model 对象
-	model := makeModelFromString(args[0])
-
-	// 拼接目标文件路径
-	filePath := fmt.Sprintf("app/cmd/%s.go", model.PackageName)
-
+	filePath, model := getArgPathAndModel(args[0], "app/cmd", ".go", 0)
 	// 从模板中创建文件（做好变量替换）
 	createFileFromStub(filePath, "cmd", model)
 

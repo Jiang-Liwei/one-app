@@ -45,6 +45,7 @@ func init() {
 		MakeCMD,
 		MakeModel,
 		MakeController,
+		MakeRequest,
 	)
 }
 
@@ -111,4 +112,45 @@ func createFileFromStub(filePath string, stubName string, model Model, variables
 
 	// 提示成功
 	console.Success(fmt.Sprintf("[%s] created.", filePath))
+}
+
+// getArgPathAndModel 获取命令参数内的路径以及Model返回
+func getArgPathAndModel(path string, filePath string, file string, modelType int) (string, Model) {
+
+	array := strings.Split(path, "/")
+
+	arrayLen := len(array)
+	if !(arrayLen > 0) {
+		console.Exit("controller名称不能为空")
+	}
+	// 最后一个下标
+	maxKey := arrayLen - 1
+	var modelValue string
+	var model Model
+	for k, v := range array {
+
+		if k == maxKey {
+			// name 用来生成 cmd.Model 实例
+			model = makeModelFromString(v)
+			switch modelType {
+			case 1:
+				modelValue = model.TableName
+			case 2:
+				modelValue = model.StructName
+			case 3:
+				modelValue = model.StructNamePlural
+			case 4:
+				modelValue = model.VariableName
+			case 5:
+				modelValue = model.VariableNamePlural
+			default:
+				modelValue = model.PackageName
+			}
+
+			filePath = filePath + "/" + modelValue + file
+			continue
+		}
+		filePath = filePath + "/" + v
+	}
+	return filePath, model
 }
