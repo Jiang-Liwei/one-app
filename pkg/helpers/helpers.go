@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	mathRand "math/rand"
+	"os"
+	"path/filepath"
 	"reflect"
 	"time"
 )
@@ -71,4 +73,18 @@ func RandomString(length int) string {
 		b[i] = letters[mathRand.Intn(len(letters))]
 	}
 	return string(b)
+}
+
+// FolderIsExist 判断带有文件名的文件夹是否存在,不存在返回文件夹路径
+func FolderIsExist(filePath string) (bool, string) {
+	if !(len(filePath) > 0) {
+		return true, ""
+	}
+	folder, _ := filepath.Split(filePath)
+	_, err := os.Stat(folder)
+	if err == nil {
+		return true, ""
+	}
+
+	return false, folder
 }

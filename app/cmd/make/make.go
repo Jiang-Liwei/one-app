@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"forum/pkg/console"
 	"forum/pkg/file"
+	"forum/pkg/helpers"
 	"forum/pkg/str"
 	"github.com/iancoleman/strcase"
 	"github.com/spf13/cobra"
+	"os"
 	"strings"
 )
 
@@ -42,6 +44,7 @@ func init() {
 	Make.AddCommand(
 		MakeCMD,
 		MakeModel,
+		MakeController,
 	)
 }
 
@@ -90,6 +93,14 @@ func createFileFromStub(filePath string, stubName string, model Model, variables
 	// 对模板内容做变量替换
 	for search, replace := range replaces {
 		modelStub = strings.ReplaceAll(modelStub, search, replace)
+	}
+
+	isHave, folder := helpers.FolderIsExist(filePath)
+	if !isHave {
+		err = os.MkdirAll(folder, 0775)
+		if err != nil {
+			console.Exit(err.Error())
+		}
 	}
 
 	// 存储到目标文件中
