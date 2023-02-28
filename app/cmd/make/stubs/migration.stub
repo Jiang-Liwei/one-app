@@ -18,7 +18,7 @@ func init() {
         Phone    string `gorm:"type:varchar(20);index;default:null"`
         Password string `gorm:"type:varchar(255)"`
 
-        models.CommonTimestampsField
+        models.TimestampsField
     }
 
     up := func(migrator gorm.Migrator, DB *sql.DB) {

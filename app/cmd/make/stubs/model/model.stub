@@ -13,7 +13,7 @@ type {{StructName}} struct {
     // Put fields in here
     FIXME()
 
-    models.CommonTimestampsField
+    models.TimestampsField
 }
 
 func ({{VariableName}} *{{StructName}}) Create() {
