@@ -3,6 +3,7 @@ package routes
 import (
 	controllers "forum/app/http/controllers/api"
 	"forum/app/http/controllers/api/auth"
+	"forum/app/http/controllers/api/category"
 	"forum/app/http/middlewares"
 	"github.com/gin-gonic/gin"
 )
@@ -62,6 +63,15 @@ func RegisterRoutes(route *gin.Engine) {
 			uc := new(controllers.UsersController)
 			userGroup.GET("info", middlewares.AuthJWT(), uc.CurrentUser)
 			userGroup.GET("users", uc.Index)
+		}
+
+		// 分类模块
+		categoryGroup := api.Group("category")
+		categoryGroup.Use()
+		{
+			cgc := new(category.CategoriesController)
+			// 创建分类
+			categoryGroup.POST("create", middlewares.AuthJWT(), cgc.Create)
 		}
 	}
 }
