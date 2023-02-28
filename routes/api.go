@@ -70,6 +70,8 @@ func RegisterRoutes(route *gin.Engine) {
 		categoryGroup.Use()
 		{
 			cgc := new(category.CategoriesController)
+			// 分类列表
+			categoryGroup.GET("", cgc.Index)
 			// 创建分类
 			categoryGroup.POST("", middlewares.AuthJWT(), cgc.Store)
 			// 更新分类
