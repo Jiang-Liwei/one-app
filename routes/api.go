@@ -86,6 +86,7 @@ func RegisterRoutes(route *gin.Engine) {
 			tpc := new(topic.TopicsController)
 			topicGroup.POST("", middlewares.AuthJWT(), tpc.Store)
 			topicGroup.PUT("/:id", middlewares.AuthJWT(), tpc.Update)
+			topicGroup.DELETE("/:id", middlewares.AuthJWT(), tpc.Delete)
 		}
 	}
 }
