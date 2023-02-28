@@ -1,8 +1,7 @@
-package v1
+package controller
 
 import (
     "forum/app/models/{{PackageName}}"
-    "forum/app/policies"
     "forum/app/requests"
     "forum/pkg/response"
 
@@ -10,7 +9,7 @@ import (
 )
 
 type {{StructNamePlural}}Controller struct {
-    BaseAPIController
+    Controller
 }
 
 func (ctrl *{{StructNamePlural}}Controller) Index(c *gin.Context) {

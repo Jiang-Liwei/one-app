@@ -13,6 +13,8 @@ func RegisterRoutes(route *gin.Engine) {
 	{
 		index := new(controllers.IndexController)
 		api.GET("/index", index.Index)
+
+		// 注册模块
 		authGroup := api.Group("/auth")
 		authGroup.Use(middlewares.LimitIP("1000-H"))
 		{
@@ -44,13 +46,21 @@ func RegisterRoutes(route *gin.Engine) {
 				loginGroup.POST("refresh-token", middlewares.AuthJWT(), login.RefreshToken)
 			}
 
-			//密码操作模块
+			// 密码操作模块
 			password := new(auth.PasswordController)
 			passwordGroup := authGroup.Group("password")
 			{
 				// 手机号重置密码
 				passwordGroup.POST("reset/using-phone", middlewares.GuestJWT(), password.ResetByPhone)
 			}
+		}
+
+		// 用户模块
+		userGroup := api.Group("/user")
+		userGroup.Use()
+		{
+			uc := new(controllers.UsersController)
+			userGroup.GET("info", middlewares.AuthJWT(), uc.CurrentUser)
 		}
 	}
 }
