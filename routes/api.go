@@ -4,19 +4,20 @@ import (
 	controllers "forum/app/http/controllers/api"
 	"forum/app/http/controllers/api/auth"
 	"forum/app/http/controllers/api/category"
+	controller "forum/app/http/controllers/api/topic"
 	"forum/app/http/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
 // RegisterRoutes 注册路由
 func RegisterRoutes(route *gin.Engine) {
-	api := route.Group("/api")
+	api := route.Group("api")
 	{
 		index := new(controllers.IndexController)
-		api.GET("/index", index.Index)
+		api.GET("index", index.Index)
 
 		// 注册模块
-		authGroup := api.Group("/auth")
+		authGroup := api.Group("auth")
 		authGroup.Use(middlewares.LimitIP("1000-H"))
 		{
 			signupGroup := authGroup.Group("signup")
@@ -57,8 +58,7 @@ func RegisterRoutes(route *gin.Engine) {
 		}
 
 		// 用户模块
-		userGroup := api.Group("/user")
-		userGroup.Use()
+		userGroup := api.Group("user")
 		{
 			uc := new(controllers.UsersController)
 			userGroup.GET("info", middlewares.AuthJWT(), uc.CurrentUser)
@@ -67,7 +67,6 @@ func RegisterRoutes(route *gin.Engine) {
 
 		// 分类模块
 		categoryGroup := api.Group("categories")
-		categoryGroup.Use()
 		{
 			cgc := new(category.CategoriesController)
 			// 分类列表
@@ -78,6 +77,14 @@ func RegisterRoutes(route *gin.Engine) {
 			categoryGroup.PUT("/:id", middlewares.AuthJWT(), cgc.Update)
 			// 删除分类
 			categoryGroup.DELETE("/:id", middlewares.AuthJWT(), cgc.Delete)
+		}
+
+		// 话题模块
+		topicGroup := api.Group("topics")
+		{
+
+			tpc := new(controller.TopicsController)
+			topicGroup.POST("", middlewares.AuthJWT(), tpc.Store)
 		}
 	}
 }

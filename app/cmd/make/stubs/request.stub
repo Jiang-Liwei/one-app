@@ -31,5 +31,5 @@ func {{StructName}}Save(data interface{}, c *gin.Context) map[string][]string {
         //     "max_cn:描述长度不能超过 255 个字",
         // },
     }
-	errs := requests.NewValidate(data, rules, msg)
+	return requests.NewValidate(data, rules, msg)
 }
