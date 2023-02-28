@@ -3,6 +3,7 @@ package topic
 import (
 	"forum/app/http/controllers/api"
 	"forum/app/models/topic"
+	"forum/app/policies"
 	"forum/app/requests"
 	topicRequests "forum/app/requests/topic"
 	"forum/pkg/auth"
@@ -41,6 +42,11 @@ func (ctrl *TopicsController) Update(c *gin.Context) {
 	topicModel := topic.Get(c.Param("id"))
 	if topicModel.ID == 0 {
 		response.Abort404(c)
+		return
+	}
+
+	if ok := policies.CanModifyTopic(c, topicModel); !ok {
+		response.Abort403(c)
 		return
 	}
 
