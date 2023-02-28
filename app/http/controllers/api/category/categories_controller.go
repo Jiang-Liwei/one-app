@@ -14,7 +14,7 @@ type CategoriesController struct {
 	api.Controller
 }
 
-func (ctrl *CategoriesController) Create(c *gin.Context) {
+func (ctrl *CategoriesController) Store(c *gin.Context) {
 
 	request := requestsCategory.CategoryRequest{}
 	if ok := requests.Validate(c, &request, requestsCategory.CategorySave); !ok {
@@ -30,5 +30,32 @@ func (ctrl *CategoriesController) Create(c *gin.Context) {
 		response.Created(c, categoryModel)
 	} else {
 		response.Abort500(c, "创建失败，请稍后尝试~")
+	}
+}
+
+func (ctrl *CategoriesController) Update(c *gin.Context) {
+
+	// 验证 url 参数 id 是否正确
+	categoryModel := category.Get(c.Param("id"))
+	if categoryModel.ID == 0 {
+		response.Abort404(c)
+		return
+	}
+
+	// 表单验证
+	request := requestsCategory.CategoryRequest{}
+	if ok := requests.Validate(c, &request, requestsCategory.CategorySave); !ok {
+		return
+	}
+
+	// 保存数据
+	categoryModel.Name = request.Name
+	categoryModel.Description = request.Description
+	rowsAffected := categoryModel.Save()
+
+	if rowsAffected > 0 {
+		response.Data(c, categoryModel)
+	} else {
+		response.Abort500(c)
 	}
 }

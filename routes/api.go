@@ -66,12 +66,14 @@ func RegisterRoutes(route *gin.Engine) {
 		}
 
 		// 分类模块
-		categoryGroup := api.Group("category")
+		categoryGroup := api.Group("categories")
 		categoryGroup.Use()
 		{
 			cgc := new(category.CategoriesController)
 			// 创建分类
-			categoryGroup.POST("create", middlewares.AuthJWT(), cgc.Create)
+			categoryGroup.POST("", middlewares.AuthJWT(), cgc.Store)
+			// 更新分类
+			categoryGroup.PUT("/:id", middlewares.AuthJWT(), cgc.Update)
 		}
 	}
 }
