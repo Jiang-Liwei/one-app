@@ -84,8 +84,13 @@ func RegisterRoutes(route *gin.Engine) {
 		{
 
 			tpc := new(topic.TopicsController)
+			// 话题列表
+			topicGroup.GET("", tpc.Index)
+			// 创建话题
 			topicGroup.POST("", middlewares.AuthJWT(), tpc.Store)
+			// 修改话题
 			topicGroup.PUT("/:id", middlewares.AuthJWT(), tpc.Update)
+			// 删除话题
 			topicGroup.DELETE("/:id", middlewares.AuthJWT(), tpc.Delete)
 		}
 	}
