@@ -1,6 +1,7 @@
 package api
 
 import (
+	"forum/app/models/user"
 	"forum/pkg/auth"
 	"forum/pkg/response"
 
@@ -15,4 +16,10 @@ type UsersController struct {
 func (ctrl *UsersController) CurrentUser(c *gin.Context) {
 	userModel := auth.User(c)
 	response.Data(c, userModel)
+}
+
+// Index 所有用户
+func (ctrl *UsersController) Index(c *gin.Context) {
+	data := user.All()
+	response.Data(c, data)
 }

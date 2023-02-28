@@ -61,6 +61,7 @@ func RegisterRoutes(route *gin.Engine) {
 		{
 			uc := new(controllers.UsersController)
 			userGroup.GET("info", middlewares.AuthJWT(), uc.CurrentUser)
+			userGroup.GET("users", uc.Index)
 		}
 	}
 }
