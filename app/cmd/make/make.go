@@ -48,6 +48,7 @@ func init() {
 		MakeRequest,
 		MakeMigration,
 		MakeFactory,
+		MakeSeeder,
 	)
 }
 
