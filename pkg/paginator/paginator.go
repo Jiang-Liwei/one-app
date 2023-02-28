@@ -175,11 +175,11 @@ func (p Paginator) getPageLink(page int) string {
 	return fmt.Sprintf("%v%v&%s=%s&%s=%s&%s=%v",
 		p.BaseURL,
 		page,
-		config.Get("paging.url_query_sort"),
+		config.Get[string]("paging.url_query_sort"),
 		p.Sort,
-		config.Get("paging.url_query_order"),
+		config.Get[string]("paging.url_query_order"),
 		p.Order,
-		config.Get("paging.url_query_per_page"),
+		config.Get[string]("paging.url_query_per_page"),
 		p.PerPage,
 	)
 }

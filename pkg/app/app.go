@@ -22,3 +22,8 @@ func TimeNowInTimezone() time.Time {
 	chinaTimezone, _ := time.LoadLocation(config.Get[string]("app.timezone"))
 	return time.Now().In(chinaTimezone)
 }
+
+// URL 传参 path 拼接站点的 URL
+func URL(path string) string {
+	return config.Get[string]("app.url") + path
+}
