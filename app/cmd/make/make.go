@@ -49,6 +49,7 @@ func init() {
 		MakeMigration,
 		MakeFactory,
 		MakeSeeder,
+		MakePolicy,
 	)
 }
 
