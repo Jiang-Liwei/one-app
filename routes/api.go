@@ -76,6 +76,8 @@ func RegisterRoutes(route *gin.Engine) {
 			categoryGroup.POST("", middlewares.AuthJWT(), cgc.Store)
 			// 更新分类
 			categoryGroup.PUT("/:id", middlewares.AuthJWT(), cgc.Update)
+			// 删除分类
+			categoryGroup.DELETE("/:id", middlewares.AuthJWT(), cgc.Delete)
 		}
 	}
 }
