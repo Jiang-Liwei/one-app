@@ -92,6 +92,8 @@ func RegisterRoutes(route *gin.Engine) {
 			topicGroup.PUT("/:id", middlewares.AuthJWT(), tpc.Update)
 			// 删除话题
 			topicGroup.DELETE("/:id", middlewares.AuthJWT(), tpc.Delete)
+			// 话题详情
+			topicGroup.GET("/:id", tpc.Show)
 		}
 	}
 }
