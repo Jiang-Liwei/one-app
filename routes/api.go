@@ -4,7 +4,7 @@ import (
 	controllers "forum/app/http/controllers/api"
 	"forum/app/http/controllers/api/auth"
 	"forum/app/http/controllers/api/category"
-	controller "forum/app/http/controllers/api/topic"
+	"forum/app/http/controllers/api/topic"
 	"forum/app/http/middlewares"
 	"github.com/gin-gonic/gin"
 )
@@ -83,8 +83,9 @@ func RegisterRoutes(route *gin.Engine) {
 		topicGroup := api.Group("topics")
 		{
 
-			tpc := new(controller.TopicsController)
+			tpc := new(topic.TopicsController)
 			topicGroup.POST("", middlewares.AuthJWT(), tpc.Store)
+			topicGroup.PUT("/:id", middlewares.AuthJWT(), tpc.Update)
 		}
 	}
 }
