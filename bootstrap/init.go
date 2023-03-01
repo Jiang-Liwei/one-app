@@ -60,6 +60,7 @@ func Start() {
 		make.Make,
 		cmd.Migrate,
 		cmd.Seed,
+		cmd.Cache,
 	)
 
 	// 配置默认运行 Web 服务
