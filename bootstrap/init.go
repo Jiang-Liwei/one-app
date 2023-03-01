@@ -5,6 +5,7 @@ import (
 	"forum/app/cmd"
 	"forum/app/cmd/make"
 	btsConfig "forum/config"
+	"forum/pkg/cache"
 	"forum/pkg/config"
 	"forum/pkg/console"
 	"forum/pkg/database"
@@ -42,6 +43,9 @@ func Start() {
 
 			// 初始化 Redis
 			redis.SetupRedis()
+
+			// 初始化缓存
+			cache.SetupCache()
 
 			// 这里进行自定义规则的添加
 			requests.InitRequests()
