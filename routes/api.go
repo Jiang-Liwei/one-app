@@ -4,6 +4,7 @@ import (
 	controllers "forum/app/http/controllers/api"
 	"forum/app/http/controllers/api/auth"
 	"forum/app/http/controllers/api/category"
+	"forum/app/http/controllers/api/sundry"
 	"forum/app/http/controllers/api/topic"
 	"forum/app/http/middlewares"
 	"github.com/gin-gonic/gin"
@@ -82,7 +83,6 @@ func RegisterRoutes(route *gin.Engine) {
 		// 话题模块
 		topicGroup := api.Group("topics")
 		{
-
 			tpc := new(topic.TopicsController)
 			// 话题列表
 			topicGroup.GET("", tpc.Index)
@@ -94,6 +94,13 @@ func RegisterRoutes(route *gin.Engine) {
 			topicGroup.DELETE("/:id", middlewares.AuthJWT(), tpc.Delete)
 			// 话题详情
 			topicGroup.GET("/:id", tpc.Show)
+		}
+
+		// 杂项模块
+		sundryGroup := api.Group("sundry")
+		{
+			lsc := new(sundry.LinksController)
+			sundryGroup.GET("link", lsc.Index)
 		}
 	}
 }
