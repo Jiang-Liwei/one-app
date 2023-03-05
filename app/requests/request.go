@@ -12,7 +12,7 @@ type ValidatorFunc func(interface{}, *gin.Context) map[string][]string
 
 func Validate(c *gin.Context, obj interface{}, handler ValidatorFunc) bool {
 
-	if err := c.ShouldBindJSON(obj); err != nil {
+	if err := c.ShouldBind(obj); err != nil {
 		response.BadRequest(c, err)
 		fmt.Println(err.Error())
 		return false
@@ -40,4 +40,15 @@ func NewValidate(data interface{}, rules govalidator.MapData, messages govalidat
 
 	// 返回验证结果
 	return govalidator.New(opts).ValidateStruct()
+}
+
+func ValidateFile(c *gin.Context, data interface{}, rules govalidator.MapData, messages govalidator.MapData) map[string][]string {
+	opts := govalidator.Options{
+		Request:       c.Request,
+		Rules:         rules,
+		Messages:      messages,
+		TagIdentifier: "valid",
+	}
+	// 调用 govalidator 的 Validate 方法来验证文件
+	return govalidator.New(opts).Validate()
 }

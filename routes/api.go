@@ -25,17 +25,17 @@ func RegisterRoutes(route *gin.Engine) {
 			{
 				signup := new(auth.SignUpController)
 				// 手机是否注册
-				signupGroup.POST("/phone/exist", middlewares.GuestJWT(), signup.IsPhoneExist)
+				signupGroup.POST("phone/exist", middlewares.GuestJWT(), signup.IsPhoneExist)
 				// 判断 Email 是否已注册
-				signupGroup.POST("/email/exist", middlewares.GuestJWT(), signup.IsEmailExist)
+				signupGroup.POST("email/exist", middlewares.GuestJWT(), signup.IsEmailExist)
 				// 手机号注册
-				signupGroup.POST("/using-phone", middlewares.GuestJWT(), signup.SignupUsingPhone)
+				signupGroup.POST("using-phone", middlewares.GuestJWT(), signup.SignupUsingPhone)
 			}
 			verifyCode := new(auth.VerifyCodeController)
 			// 图片验证码
-			authGroup.GET("/verify-codes/captcha", middlewares.LimitPerRoute("50-H"), verifyCode.ShowCaptcha)
+			authGroup.GET("verify-codes/captcha", middlewares.LimitPerRoute("50-H"), verifyCode.ShowCaptcha)
 			// 发送短信
-			authGroup.POST("/verify-codes/sms", middlewares.LimitPerRoute("20-H"), verifyCode.SendUsingPhone)
+			authGroup.POST("verify-codes/sms", middlewares.LimitPerRoute("20-H"), verifyCode.SendUsingPhone)
 
 			// 登录模块
 			login := new(auth.LoginController)
@@ -69,11 +69,13 @@ func RegisterRoutes(route *gin.Engine) {
 			// 修改账户信息
 			userGroup.PUT("self", middlewares.AuthJWT(), uc.UpdateProfile)
 			// 更换邮箱账号
-			userGroup.PUT("/email", middlewares.AuthJWT(), uc.UpdateEmail)
+			userGroup.PUT("email", middlewares.AuthJWT(), uc.UpdateEmail)
 			// 更换手机账号
-			userGroup.PUT("/phone", middlewares.AuthJWT(), uc.UpdatePhone)
+			userGroup.PUT("phone", middlewares.AuthJWT(), uc.UpdatePhone)
 			// 修改密码
-			userGroup.PUT("/password", middlewares.AuthJWT(), uc.UpdatePassword)
+			userGroup.PUT("password", middlewares.AuthJWT(), uc.UpdatePassword)
+			// 修改头像
+			userGroup.PUT("avatar", middlewares.AuthJWT(), uc.UpdateAvatar)
 		}
 
 		// 分类模块
@@ -85,9 +87,9 @@ func RegisterRoutes(route *gin.Engine) {
 			// 创建分类
 			categoryGroup.POST("", middlewares.AuthJWT(), cgc.Store)
 			// 更新分类
-			categoryGroup.PUT("/:id", middlewares.AuthJWT(), cgc.Update)
+			categoryGroup.PUT(":id", middlewares.AuthJWT(), cgc.Update)
 			// 删除分类
-			categoryGroup.DELETE("/:id", middlewares.AuthJWT(), cgc.Delete)
+			categoryGroup.DELETE(":id", middlewares.AuthJWT(), cgc.Delete)
 		}
 
 		// 话题模块
@@ -99,11 +101,11 @@ func RegisterRoutes(route *gin.Engine) {
 			// 创建话题
 			topicGroup.POST("", middlewares.AuthJWT(), tpc.Store)
 			// 修改话题
-			topicGroup.PUT("/:id", middlewares.AuthJWT(), tpc.Update)
+			topicGroup.PUT(":id", middlewares.AuthJWT(), tpc.Update)
 			// 删除话题
-			topicGroup.DELETE("/:id", middlewares.AuthJWT(), tpc.Delete)
+			topicGroup.DELETE(":id", middlewares.AuthJWT(), tpc.Delete)
 			// 话题详情
-			topicGroup.GET("/:id", tpc.Show)
+			topicGroup.GET(":id", tpc.Show)
 		}
 
 		// 杂项模块

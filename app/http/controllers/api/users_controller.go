@@ -5,6 +5,8 @@ import (
 	"forum/app/requests"
 	userRequest "forum/app/requests/user"
 	"forum/pkg/auth"
+	"forum/pkg/config"
+	"forum/pkg/file"
 	"forum/pkg/response"
 	"time"
 
@@ -125,4 +127,24 @@ func (ctrl *UsersController) UpdatePassword(c *gin.Context) {
 
 	response.Success(c)
 
+}
+
+func (ctrl *UsersController) UpdateAvatar(c *gin.Context) {
+
+	request := userRequest.UpdateAvatarRequest{}
+	if ok := requests.Validate(c, &request, userRequest.UpdateAvatar); !ok {
+		return
+	}
+
+	avatar, err := file.SaveUploadAvatar(c, request.Avatar)
+	if err != nil {
+		response.Abort500(c, "上传头像失败，请稍后尝试~")
+		return
+	}
+
+	currentUser := auth.User(c)
+	currentUser.Avatar = config.Get[string]("app.url") + avatar
+	currentUser.Save()
+
+	response.Data(c, currentUser)
 }

@@ -4,6 +4,7 @@ import (
 	"forum/app/requests"
 	"forum/app/requests/validators"
 	"forum/pkg/auth"
+	"mime/multipart"
 
 	"github.com/gin-gonic/gin"
 	"github.com/thedevsaddam/govalidator"
@@ -155,4 +156,28 @@ func UpdatePassword(data interface{}, c *gin.Context) map[string][]string {
 	errs = validators.ValidatePasswordConfirm(_data.NewPassword, _data.NewPasswordConfirm, errs)
 
 	return errs
+}
+
+type UpdateAvatarRequest struct {
+	Avatar *multipart.FileHeader `valid:"avatar" form:"avatar"`
+}
+
+func UpdateAvatar(data interface{}, c *gin.Context) map[string][]string {
+
+	rules := govalidator.MapData{
+		// size 的单位为 bytes
+		// - 1024 bytes 为 1kb
+		// - 1048576 bytes 为 1mb
+		// - 20971520 bytes 为 20mb
+		"file:avatar": []string{"ext:png,jpg,jpeg", "size:20971520", "required"},
+	}
+	messages := govalidator.MapData{
+		"file:avatar": []string{
+			"ext:ext头像只能上传 png, jpg, jpeg 任意一种的图片",
+			"size:头像文件最大不能超过 20MB",
+			"required:必须上传图片",
+		},
+	}
+
+	return requests.ValidateFile(c, data, rules, messages)
 }
