@@ -64,6 +64,7 @@ func RegisterRoutes(route *gin.Engine) {
 			uc := new(controllers.UsersController)
 			userGroup.GET("info", middlewares.AuthJWT(), uc.CurrentUser)
 			userGroup.GET("users", uc.Index)
+			userGroup.PUT("self", middlewares.AuthJWT(), uc.UpdateProfile)
 		}
 
 		// 分类模块

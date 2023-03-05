@@ -3,8 +3,10 @@ package api
 import (
 	"forum/app/models/user"
 	"forum/app/requests"
+	userRequest "forum/app/requests/user"
 	"forum/pkg/auth"
 	"forum/pkg/response"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,4 +33,29 @@ func (ctrl *UsersController) Index(c *gin.Context) {
 		"data":  data,
 		"pager": pager,
 	})
+}
+
+func (ctrl *UsersController) UpdateProfile(c *gin.Context) {
+
+	request := userRequest.UserUpdateProfileRequest{}
+	if ok := requests.Validate(c, &request, userRequest.UserUpdateProfile); !ok {
+		return
+	}
+
+	currentUser := auth.User(c)
+	currentUser.Name = request.Name
+	currentUser.City = request.City
+	currentUser.Introduction = request.Introduction
+
+	// 如果注册时间为空后面补一个
+	if currentUser.CreatedAt.IsZero() {
+		currentUser.CreatedAt = time.Now()
+	}
+
+	rowsAffected := currentUser.Save()
+	if rowsAffected > 0 {
+		response.Data(c, currentUser)
+	} else {
+		response.Abort500(c, "更新失败，请稍后尝试~")
+	}
 }
