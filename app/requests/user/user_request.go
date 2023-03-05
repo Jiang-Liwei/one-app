@@ -9,13 +9,13 @@ import (
 	"github.com/thedevsaddam/govalidator"
 )
 
-type UserUpdateProfileRequest struct {
+type UpdateProfileRequest struct {
 	Name         string `valid:"name" json:"name"`
 	City         string `valid:"city" json:"city"`
 	Introduction string `valid:"introduction" json:"introduction"`
 }
 
-func UserUpdateProfile(data interface{}, c *gin.Context) map[string][]string {
+func UpdateProfile(data interface{}, c *gin.Context) map[string][]string {
 
 	// 查询用户名重复时，过滤掉当前用户 ID
 	uid := auth.UserID(c)
@@ -44,12 +44,12 @@ func UserUpdateProfile(data interface{}, c *gin.Context) map[string][]string {
 	return requests.NewValidate(data, rules, messages)
 }
 
-type UserUpdateEmailRequest struct {
+type UpdateEmailRequest struct {
 	Email      string `json:"email,omitempty" valid:"email"`
 	VerifyCode string `json:"verify_code,omitempty" valid:"verify_code"`
 }
 
-func UserUpdateEmail(data interface{}, c *gin.Context) map[string][]string {
+func UpdateEmail(data interface{}, c *gin.Context) map[string][]string {
 
 	currentUser := auth.User(c)
 	rules := govalidator.MapData{
@@ -78,18 +78,18 @@ func UserUpdateEmail(data interface{}, c *gin.Context) map[string][]string {
 	}
 
 	errs := requests.NewValidate(data, rules, messages)
-	_data := data.(*UserUpdateEmailRequest)
+	_data := data.(*UpdateEmailRequest)
 	errs = validators.ValidateVerifyCode(_data.Email, _data.VerifyCode, errs)
 
 	return errs
 }
 
-type UserUpdatePhoneRequest struct {
+type UpdatePhoneRequest struct {
 	Phone      string `json:"phone,omitempty" valid:"phone"`
 	VerifyCode string `json:"verify_code,omitempty" valid:"verify_code"`
 }
 
-func UserUpdatePhone(data interface{}, c *gin.Context) map[string][]string {
+func UpdatePhone(data interface{}, c *gin.Context) map[string][]string {
 
 	currentUser := auth.User(c)
 
@@ -116,8 +116,43 @@ func UserUpdatePhone(data interface{}, c *gin.Context) map[string][]string {
 	}
 
 	errs := requests.NewValidate(data, rules, messages)
-	_data := data.(*UserUpdatePhoneRequest)
+	_data := data.(*UpdatePhoneRequest)
 	errs = validators.ValidateVerifyCode(currentUser.Phone, _data.VerifyCode, errs)
+
+	return errs
+}
+
+type UpdatePasswordRequest struct {
+	Password           string `valid:"password" json:"password,omitempty"`
+	NewPassword        string `valid:"new_password" json:"new_password,omitempty"`
+	NewPasswordConfirm string `valid:"new_password_confirm" json:"new_password_confirm,omitempty"`
+}
+
+func UpdatePassword(data interface{}, c *gin.Context) map[string][]string {
+	rules := govalidator.MapData{
+		"password":             []string{"required", "min:6"},
+		"new_password":         []string{"required", "min:6"},
+		"new_password_confirm": []string{"required", "min:6"},
+	}
+	messages := govalidator.MapData{
+		"password": []string{
+			"required:密码为必填项",
+			"min:密码长度需大于 6",
+		},
+		"new_password": []string{
+			"required:密码为必填项",
+			"min:密码长度需大于 6",
+		},
+		"new_password_confirm": []string{
+			"required:确认密码框为必填项",
+			"min:确认密码长度需大于 6",
+		},
+	}
+
+	// 确保 comfirm 密码正确
+	errs := requests.NewValidate(data, rules, messages)
+	_data := data.(*UpdatePasswordRequest)
+	errs = validators.ValidatePasswordConfirm(_data.NewPassword, _data.NewPasswordConfirm, errs)
 
 	return errs
 }

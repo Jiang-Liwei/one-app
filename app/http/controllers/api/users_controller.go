@@ -37,8 +37,8 @@ func (ctrl *UsersController) Index(c *gin.Context) {
 
 func (ctrl *UsersController) UpdateProfile(c *gin.Context) {
 
-	request := userRequest.UserUpdateProfileRequest{}
-	if ok := requests.Validate(c, &request, userRequest.UserUpdateProfile); !ok {
+	request := userRequest.UpdateProfileRequest{}
+	if ok := requests.Validate(c, &request, userRequest.UpdateProfile); !ok {
 		return
 	}
 
@@ -62,8 +62,8 @@ func (ctrl *UsersController) UpdateProfile(c *gin.Context) {
 
 func (ctrl *UsersController) UpdateEmail(c *gin.Context) {
 
-	request := userRequest.UserUpdateEmailRequest{}
-	if ok := requests.Validate(c, &request, userRequest.UserUpdateEmail); !ok {
+	request := userRequest.UpdateEmailRequest{}
+	if ok := requests.Validate(c, &request, userRequest.UpdateEmail); !ok {
 		return
 	}
 
@@ -81,8 +81,8 @@ func (ctrl *UsersController) UpdateEmail(c *gin.Context) {
 
 func (ctrl *UsersController) UpdatePhone(c *gin.Context) {
 
-	request := userRequest.UserUpdatePhoneRequest{}
-	if ok := requests.Validate(c, &request, userRequest.UserUpdatePhone); !ok {
+	request := userRequest.UpdatePhoneRequest{}
+	if ok := requests.Validate(c, &request, userRequest.UpdatePhone); !ok {
 		return
 	}
 
@@ -95,4 +95,34 @@ func (ctrl *UsersController) UpdatePhone(c *gin.Context) {
 	} else {
 		response.Abort500(c, "更新失败，请稍后尝试~")
 	}
+}
+
+func (ctrl *UsersController) UpdatePassword(c *gin.Context) {
+
+	request := userRequest.UpdatePasswordRequest{}
+	if ok := requests.Validate(c, &request, userRequest.UpdatePassword); !ok {
+		return
+	}
+
+	currentUser := auth.User(c)
+	// 验证原始密码是否正确
+	isTrue := currentUser.ComparePassword(request.Password)
+	if !isTrue {
+		// 失败，显示错误提示
+		response.Unauthorized(c, "原密码不正确")
+		return
+	}
+
+	isTrue = currentUser.ComparePassword(request.NewPassword)
+	if isTrue {
+		response.Unauthorized(c, "新密码与旧密码一致")
+		return
+	}
+
+	// 更新密码为新密码
+	currentUser.Password = request.NewPassword
+	currentUser.Save()
+
+	response.Success(c)
+
 }
