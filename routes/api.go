@@ -62,9 +62,14 @@ func RegisterRoutes(route *gin.Engine) {
 		userGroup := api.Group("user")
 		{
 			uc := new(controllers.UsersController)
+			// 个人详情
 			userGroup.GET("info", middlewares.AuthJWT(), uc.CurrentUser)
+			// 用户列表
 			userGroup.GET("users", uc.Index)
+			// 修改账户信息
 			userGroup.PUT("self", middlewares.AuthJWT(), uc.UpdateProfile)
+			// 更换邮箱账号
+			userGroup.PUT("/email", middlewares.AuthJWT(), uc.UpdateEmail)
 		}
 
 		// 分类模块
