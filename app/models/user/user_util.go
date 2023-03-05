@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"forum/pkg/app"
 	"forum/pkg/database"
 	"forum/pkg/paginator"
@@ -12,7 +11,6 @@ import (
 func IsEmailExist(email string) bool {
 	result := map[string]interface{}{}
 	database.DB.Model(User{}).Where("email = ?", email).First(&result)
-	fmt.Println(result)
 	if result["email"] != email {
 		return false
 	}

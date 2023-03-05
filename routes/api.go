@@ -70,6 +70,8 @@ func RegisterRoutes(route *gin.Engine) {
 			userGroup.PUT("self", middlewares.AuthJWT(), uc.UpdateProfile)
 			// 更换邮箱账号
 			userGroup.PUT("/email", middlewares.AuthJWT(), uc.UpdateEmail)
+			// 更换手机账号
+			userGroup.PUT("/phone", middlewares.AuthJWT(), uc.UpdatePhone)
 		}
 
 		// 分类模块
